@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import font
 from tkinter import ttk
-import project
+#import project
 
 def add_entry(window, add_button):
     name = Entry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
