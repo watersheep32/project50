@@ -4,15 +4,17 @@ from tkinter import ttk
 import project
 
 def add_entry(window):
-    entry = Entry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
-    entry.grid(column=1, sticky="e", padx=20)
-    submitter = Button(window, text="submit", font=(fonter, 9), fg=colours[1], bg=colours[2], command=lambda: submit_entry(entry))
+    name = Entry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+    cost = Entry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+    amount = Entry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+    name.grid(column=1, sticky="e", pady=20)
+    submitter = Button(window, text="submit", font=(fonter, 9), fg=colours[1], bg=colours[2], command=lambda: submit_entry(window, tree, submitter, ))
     submitter.grid(column=2, sticky="e", padx=20)
 
-def submit_entry(window, entry):
+def submit_entry(window, entry, tree, submitter):
     entry_value = entry.get()
     entry.destroy()
-    project.entries[entry_value] = ["expense", 0]
+    submitter.destroy()
     tree.insert('', 'end', values=(entry_value, "expense", 0))
 
 colours = ["#646669", "#d1d0c5", "#323437", "#e2b714"]
@@ -48,9 +50,6 @@ tree.grid(column=1, columnspan=2, pady=25)
 
 addButton = Button(window, text="add table entry", font=(fonter, 13), fg=colours[1], bg=colours[2], command=lambda: add_entry(window)) #add the function later on
 addButton.grid(column=1, sticky="e")
-
-icon = PhotoImage(file="shirtificate.png")
-window.iconphoto(True, icon)
 
 window.title("h")
 
