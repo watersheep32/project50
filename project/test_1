@@ -1,0 +1,13 @@
+from tkinter import *
+from tkinter import font
+from tkinter import ttk
+from entry import Reentry
+
+window = Tk()
+
+
+entry = Reentry(window, justify= "center")
+entry.pack()
+entry.focus_set()
+
+window.mainloop()
