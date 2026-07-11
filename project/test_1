@@ -4,10 +4,12 @@ from tkinter import ttk
 from entry import Reentry
 
 window = Tk()
-
+window.columnconfigure((0, 1, 2, 3), weight=1)
 
 entry = Reentry(window, justify= "center")
-entry.pack()
+entry.grid(column=1, columnspan=2, pady=10)
 entry.focus_set()
+reentry = Reentry(window, justify= "center")
+reentry.grid(column=1, columnspan=2, pady=10)
 
 window.mainloop()

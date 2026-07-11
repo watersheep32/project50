@@ -15,7 +15,8 @@ def add_entry(window):
     amount_label.grid(column=1, pady=10, columnspan=2)
     amount.grid(column=1, columnspan=2)
     return_label.grid(column=1, columnspan=2)
-    window.bind('<Return>', lambda event: submit_entry(window, tree, name, amount, name_label, amount_label, return_label))
+    amount.focus_set()
+    window.bind('<Return>', lambda event: submit_entry(window, tree, name, amount, name_label, amount_label, return_label)) 
 
 
 def submit_entry(window, tree, name, amount, name_label, amount_label, return_label):
