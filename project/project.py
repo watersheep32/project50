@@ -1,50 +1,69 @@
-import re
+from tkinter import *
+from tkinter import font
+from tkinter import ttk
+from functions import *
 
-entries = {}
+transactions = []
 
-def main():
-    while True:
-        print(f"enter 1 to add an entry\nenter 2 to delete an entry\nenter 3 to change an entry\n4 to exit the program")
-        response = int(input())
-        if response == 4:
-            print("thank you for using the accountancy program!")
-            break
-        menu(response)
-
-def menu(response):
-    if response == 1:
-        entries = add()
-    elif response == 2:
-        entries = delete()
-    elif response == 3:
-        entries = edit()
+def add_entry(window):
+    name = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+    name_label = Label(window, text="enter name of transaction:", fg=colours[1], bg=colours[2], font=(fonter, 11))
+    amount = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+    amount_label = Label(window, text="enter amount of transaction:", fg=colours[1], bg=colours[2], font=(fonter, 11))
+    return_label = Label(window, text="submit with the enter key", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
+    name_label.grid(column=1, pady=10, columnspan=2)
+    name.grid(column=1, columnspan=2)
+    amount_label.grid(column=1, pady=10, columnspan=2)
+    amount.grid(column=1, columnspan=2)
+    return_label.grid(column=1, columnspan=2, pady=10)
+    window.bind('<Return>', lambda event: read_text(window, name, amount, tree=tree, name_label=name_label, amount_label=amount_label, return_label=return_label))
 
 
-def add():
-    entry = input("enter the name of the entry, if it's an expense or an earning and its amount separated by commas:\n").split(", ")
-    entry[2] = int(entry[2])
-    entries[entry[0]] = [entry[1], entry[2]]
-    print(entries)
-    return entries
+def read_text(window, *entries, tree, name_label, amount_label, return_label):
+    print(entries[0].get())
+    transactions.append((entries[0].get(), entries[1].get()))
+    tree.insert('', 'end', values=transactions[-1])
+    destroy_widgets(*entries, name_label, amount_label, return_label)
 
-def delete():
-    d = input("1, delete a named item\n2, delte the last entry\n3, clear the list\n")
-    if d == 1:
-        del entries[input("enter the name of the entry to be deleted:\n")]
-    if d == 2:
-        entries.popitem()
-    if d == 3:
-        entries.clear()
+def destroy_widgets(*widgets):
+    for widget in widgets:
+        widget.destroy()
 
-def edit():
-    h, t, e = input("enter the name of the entry to be edited, the value to the edited, and the new value separated by commas\n1. name\n2. expense or cost\n3. amount\n")
-    if t == 1:
-        entries[e] = entries.pop[h]
-    elif t == 2:
-        entries[h][0] = e
-    elif t == 3:
-        entries[h][1] = e
-    return entries
+colours = ["#646669", "#d1d0c5", "#323437", "#e2b714"]
+fonter = "Roboto Mono"
 
-if __name__ == "__main__":
-    main()
+window = Tk()
+window.title("this is so tedious")
+height = window.winfo_screenheight()
+width = window.winfo_screenwidth()
+back= colours[2]
+window.geometry(f"{int(width*3/5)}x{int(height*3/5)}")
+window.config(bg=back)
+window.columnconfigure((0, 1, 2, 3), weight=1)
+
+w = window.winfo_reqwidth()
+h = window.winfo_reqheight()
+print(w, h)
+
+stile = ttk.Style()
+stile.theme_use('clam')
+stile.configure('Treeview.Heading', background=colours[3], foreground=colours[2], font=(fonter, 12))
+stile.configure('Treeview', background=colours[0], foreground=colours[1], font=(fonter, 12), fieldbackground=colours[0])
+
+
+tree = ttk.Treeview(window, columns=('name', 'amount'), show='headings')
+tree.heading("name", text="name")
+tree.heading("amount", text="amount")
+
+tree.column("#0", width=0, minwidth=0)
+tree.column("name", anchor=CENTER, width=int(width/6))
+tree.column("amount", anchor=CENTER, width=int(width/6))
+
+tree.grid(column=1, columnspan=2, pady=25)
+
+input_label = Label(window, text="press ctrl+A to add a new transaction", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
+input_label.grid(column=1, columnspan=2, pady=10)
+window.bind('<Control-a>', lambda event: add_entry(window))
+
+
+window.mainloop()

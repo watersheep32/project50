@@ -1,16 +1,19 @@
-import tkinter as tk
+from tkinter import *
+from functions import *
 
-root = tk.Tk()
-root.geometry("300x200")
+def add_entry(window):
+    label = Label(window, text="enter something")
+    entry = Reentry(window)
+    label.pack()
+    entry.pack()
+    entry.focus_set()
+    window.bind('<KeyPress-Tab>', lambda e: print(1+1))
 
-def func(event):
-    print("You hit return.")
+window = Tk()
+window.geometry("400x400")
+window.bind('<Return>', lambda event: add_entry(window))
 
-def onclick(event=None):
-    print("You clicked the button")
-root.bind('<Return>', onclick) 
+lavel = Label(window, text="press enter to add an entry")
+lavel.pack()
 
-button = tk.Button(root, text="click me", command=onclick)
-button.pack()
-
-root.mainloop()
+window.mainloop()
