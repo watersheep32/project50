@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import font
 from tkinter import ttk
 from functions import *
+from fpdf import FPDF
 
 transactions = []
 
