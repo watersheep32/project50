@@ -1,7 +1,8 @@
 from fpdf import FPDF
 
 pdf = FPDF()
+pdf.add_font("Roboto Mono", "", "project/RobotoMono-VariableFont_wght.ttf")
 pdf.add_page()
-pdf.set_font('helvetica', size=12)
-pdf.cell(text="hello world")
+pdf.set_font('Roboto Mono', size=12)
+pdf.cell(text="hello world", align="C", w=0)
 pdf.output("hello_world.pdf")

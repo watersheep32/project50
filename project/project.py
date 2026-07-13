@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import font
 from tkinter import ttk
 from functions import *
-from fpdf import FPDF
+#from fpdf import FPDF
 
 transactions = []
 
@@ -21,7 +21,6 @@ def add_entry(window):
 
 
 def read_text(window, *entries, tree, name_label, amount_label, return_label):
-    print(entries[0].get())
     transactions.append((entries[0].get(), entries[1].get()))
     tree.insert('', 'end', values=transactions[-1])
     destroy_widgets(*entries, name_label, amount_label, return_label)
