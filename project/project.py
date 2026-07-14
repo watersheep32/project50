@@ -22,13 +22,18 @@ def add_entry(window):
     window.bind('<Return>', lambda event: read_text(window, name, amount, tree=tree, name_label=name_label, amount_label=amount_label, return_label=return_label))
 
 def read_text(window, *entries, tree, name_label, amount_label, return_label):
-    transactions.append((entries[0].get(), entries[1].get()))
-    tree.insert('', 'end', values=transactions[-1])
-    destroy_widgets(*entries, name_label, amount_label, return_label)
+    name = entries[0].get()
+    amount = entries[1].get()
+    destroy_widgets(name_label, amount_label, return_label, entries[0], entries[1])
     window.bind('<Control-a>', lambda event: add_entry(window))
+    if name == "" or amount == "":
+        add_entry(window)
+        return
+    
+    transactions.append((name, amount))
+    tree.insert('', 'end', values=transactions[-1])
     global total
     total += int(transactions[-1][1])
-
 
 def destroy_widgets(*widgets):
     for widget in widgets:
