@@ -21,12 +21,14 @@ def add_entry(window):
     window.unbind('<Control-a>')
     window.bind('<Return>', lambda event: read_text(window, name, amount, tree=tree, name_label=name_label, amount_label=amount_label, return_label=return_label))
 
-
 def read_text(window, *entries, tree, name_label, amount_label, return_label):
     transactions.append((entries[0].get(), entries[1].get()))
     tree.insert('', 'end', values=transactions[-1])
     destroy_widgets(*entries, name_label, amount_label, return_label)
     window.bind('<Control-a>', lambda event: add_entry(window))
+    global total
+    total += int(transactions[-1][1])
+
 
 def destroy_widgets(*widgets):
     for widget in widgets:
@@ -69,7 +71,7 @@ tree.insert('', "end", values=("Thrustmaster T300", "250"))
 input_label = Label(window, text="press ctrl+A to add a new transaction", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 input_label.grid(column=1, columnspan=2, pady=10)
 window.bind('<Control-a>', lambda event: add_entry(window))
-running_total = Label(window, text=f"{currency}{total}")
+running_total = Label(window, text=f"{currency}{total}", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 running_total.grid(column=0, columnspan=1, sticky="e", row=1)
 
 

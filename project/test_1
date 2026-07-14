@@ -1,52 +1,13 @@
-#code to test modules id use
-import tkinter as tk
-from tkinter import ttk
+from tkinter import *
 
-root = tk.Tk()
-root.title("Advanced Treeview Styling")
-root.geometry("650x450")
+root = Tk()
+var = StringVar()
+var.set('hello')
 
-# Create style object
-style = ttk.Style()
+l = Label(root, textvariable = var)
+l.pack()
 
-# Set theme
-style.theme_use('clam')
+t = Entry(root, textvariable = var)
+t.pack()
 
-# Configure custom colors
-style.configure("Custom.Treeview",
-                background="red",
-                foreground="darkgreen",
-                fieldbackground="blue",
-                selectbackground="darkgreen",
-                selectforeground="white")
-
-# Configure heading style
-style.configure("Custom.Treeview.Heading",
-                background="darkgreen",
-                foreground="white",
-                font=('Arial', 10, 'bold'))
-
-# Create Treeview with custom style
-tree = ttk.Treeview(root, style="Custom.Treeview")
-
-# Configure columns
-tree["columns"] = ("Size", "Modified")
-tree.column("#0", width=200)
-tree.column("Size", width=100)
-tree.column("Modified", width=150)
-
-# Set headings
-tree.heading("#0", text="File/Folder")
-tree.heading("Size", text="Size")
-tree.heading("Modified", text="Last Modified")
-
-# Add sample data
-tree.insert("", "end", text="Projects", values=("--", "2024-01-15"))
-projects = tree.insert("", "end", text="Documents", values=("--", "2024-01-10"))
-tree.insert(projects, "end", text="report.pdf", values=("2.1 MB", "2024-01-08"))
-tree.insert(projects, "end", text="notes.txt", values=("1.5 KB", "2024-01-05"))
-tree.insert("", "end", text="smash", values=("16.5Gb", "2024-01-15"))
-
-tree.pack(fill="both", expand=True, padx=15, pady=15)
-
-root.mainloop()
+root.mainloop() # the window is now displayed
