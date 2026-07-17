@@ -8,36 +8,41 @@ total = 0
 currency = "£"
 
 def add_entry(window):
-    name = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
-    name_label = Label(window, text="enter name of transaction:", fg=colours[1], bg=colours[2], font=(fonter, 11))
-    amount = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
-    amount_label = Label(window, text="enter amount of transaction:\n(- for costs)", fg=colours[1], bg=colours[2], font=(fonter, 11))
-    return_label = Label(window, text="submit with the enter key", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
     name_label.grid(column=1, pady=10, columnspan=2)
     name.grid(column=1, columnspan=2)
     amount_label.grid(column=1, pady=10, columnspan=2)
     amount.grid(column=1, columnspan=2)
     return_label.grid(column=1, columnspan=2, pady=10)
     window.unbind('<Control-a>')
-    window.bind('<Return>', lambda event: read_text(window, name, amount, tree=tree, name_label=name_label, amount_label=amount_label, return_label=return_label))
+    window.bind('<Return>', lambda event: read_text(window, tree, name, amount))
+    name.focus_force()
 
-def read_text(window, *entries, tree, name_label, amount_label, return_label):
-    name = entries[0].get()
-    amount = entries[1].get()
-    destroy_widgets(name_label, amount_label, return_label, entries[0], entries[1])
-    window.bind('<Control-a>', lambda event: add_entry(window))
-    if name == "" or amount == "":
-        add_entry(window)
+def read_text(window, tree, *entries):
+    name = entries[0]
+    amount = entries[1]
+    if amount.get() == "":
+        amount.focus_force()
         return
-    
-    transactions.append((name, amount))
+    elif name.get() == "":
+        name.focus_force()
+        return
+    elif amount.get().isdigit() == False:
+        amount.focus_force()
+        warning.grid(column=2, row=5)
+        return
+    transactions.append((name.get(), amount.get()))
     tree.insert('', 'end', values=transactions[-1])
+    name.delete(0, END)
+    amount.delete(0, END)
     global total
     total += int(transactions[-1][1])
+    running_total.configure(text=f"{currency}{total}")
+    window.bind('<Control-a>', lambda event: add_entry(window))
+    hide_widgets(name, amount, name_label, amount_label, return_label, warning)
 
-def destroy_widgets(*widgets):
+def hide_widgets(*widgets):
     for widget in widgets:
-        widget.destroy()
+        widget.grid_forget()
 
 colours = ["#646669", "#d1d0c5", "#323437", "#e2b714"]
 fonter = "Roboto Mono"
@@ -77,8 +82,13 @@ input_label = Label(window, text="press ctrl+A to add a new transaction", fg=col
 input_label.grid(column=1, columnspan=2, pady=10)
 window.bind('<Control-a>', lambda event: add_entry(window))
 running_total = Label(window, text=f"{currency}{total}", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
-running_total.grid(column=0, columnspan=1, sticky="e", row=1)
-
+running_total.grid(column=1, columnspan=2, sticky="w", row=1, padx=10)
+name = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+name_label = Label(window, text="enter name of transaction:", fg=colours[1], bg=colours[2], font=(fonter, 11))
+amount = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=colours[3], relief="sunken")
+amount_label = Label(window, text="enter amount of transaction:\n(- for costs)", fg=colours[1], bg=colours[2], font=(fonter, 11))
+return_label = Label(window, text="submit with the enter key", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
+warning = Label(window, text="only numbers please", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 
 def main():
     window.mainloop()
