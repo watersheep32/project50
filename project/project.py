@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import font
 from tkinter import ttk
 from functions import *
+import time
 
 transactions = []
 total = 0
@@ -39,6 +40,14 @@ def read_text(window, tree, *entries):
     running_total.configure(text=f"{currency}{total}")
     window.bind('<Control-a>', lambda event: add_entry(window))
     hide_widgets(name, amount, name_label, amount_label, return_label, warning)
+
+def pop_tree():
+    try:
+        hide_widgets(forgor_label)
+        a = tree.selection()[0]
+        tree.delete(a)
+    except IndexError:
+        forgor_label.grid(column=2, row=2, sticky="e")
 
 def hide_widgets(*widgets):
     for widget in widgets:
@@ -78,6 +87,7 @@ tree.grid(column=1, columnspan=2, pady=25)
 
 tree.insert('', "end", values=("Thrustmaster T300", "250"))
 
+forgor_label = Label(window, text="please select a thing to delete", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 input_label = Label(window, text="press ctrl+A to add a new transaction", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 input_label.grid(column=1, columnspan=2, pady=10)
 window.bind('<Control-a>', lambda event: add_entry(window))
@@ -89,6 +99,8 @@ amount = Reentry(window, justify= "center", font=(fonter, 9), fg=colours[2], bg=
 amount_label = Label(window, text="enter amount of transaction:\n(- for costs)", fg=colours[1], bg=colours[2], font=(fonter, 11))
 return_label = Label(window, text="submit with the enter key", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 warning = Label(window, text="only numbers please", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
+delete_tree = Button(window, text="delete selected item", fg=colours[1], bg=colours[2], font=(fonter, 13), command=pop_tree)
+delete_tree.grid(column=2, row=1, sticky="e")
 
 def main():
     window.mainloop()
