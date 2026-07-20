@@ -45,7 +45,10 @@ def pop_tree():
     try:
         hide_widgets(forgor_label)
         a = tree.selection()[0]
+        global total
+        total -= tree.item(a)['values'][1]
         tree.delete(a)
+        running_total.configure(text=f"{currency}{total}")
     except IndexError:
         forgor_label.grid(column=2, row=2, sticky="e")
 
