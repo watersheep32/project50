@@ -1,26 +1,24 @@
 from tkinter import *
-from tkinter import font
 from tkinter import ttk
 from functions import *
-import time
 
 transactions = []
 total = 0
 currency = "£"
 
 def add_entry(window):
+    name.delete(0, END)
+    amount.delete(0, END)
     name_label.grid(column=1, pady=10, columnspan=2)
     name.grid(column=1, columnspan=2)
     amount_label.grid(column=1, pady=10, columnspan=2)
     amount.grid(column=1, columnspan=2)
     return_label.grid(column=1, columnspan=2, pady=10)
     window.unbind('<Control-a>')
-    window.bind('<Return>', lambda event: read_text(window, tree, name, amount))
+    window.bind('<Return>', read_text)
     name.focus_force()
 
-def read_text(window, tree, *entries):
-    name = entries[0]
-    amount = entries[1]
+def read_text():
     if amount.get() == "":
         amount.focus_force()
         return
@@ -33,10 +31,8 @@ def read_text(window, tree, *entries):
         return
     transactions.append((name.get(), amount.get()))
     tree.insert('', 'end', values=transactions[-1])
-    name.delete(0, END)
-    amount.delete(0, END)
     global total
-    total += int(transactions[-1][1])
+    total += int(amount.get())
     running_total.configure(text=f"{currency}{total}")
     window.bind('<Control-a>', lambda event: add_entry(window))
     hide_widgets(name, amount, name_label, amount_label, return_label, warning)
@@ -50,7 +46,44 @@ def pop_tree():
         tree.delete(a)
         running_total.configure(text=f"{currency}{total}")
     except IndexError:
-        forgor_label.grid(column=2, row=2, sticky="e")
+        forgor_label.grid(column=3, row=1, sticky="w")
+
+def edit_tree():
+    try:
+        edit_forgor_label.grid_forget()
+        a = tree.selection()[0]
+        b = tree.item(a)['values']
+        name.configure(textvariable=b[0])
+        amount.configure(textvariable=b[1])
+        name_label.grid(column=1, pady=10, columnspan=2)
+        name.grid(column=1, columnspan=2)
+        amount_label.grid(column=1, pady=10, columnspan=2)
+        amount.grid(column=1, columnspan=2)
+        return_label.grid(column=1, columnspan=2, pady=10)
+        window.bind('<Return>', lambda event: read_tree(b))
+    except:
+        edit_forgor_label.grid(column=2, row=2, sticky="e")
+
+def read_tree(b):
+    if amount.get() == "":
+        amount.focus_force()
+        return
+    elif name.get() == "":
+        name.focus_force()
+        return
+    elif amount.get().isdigit() == False:
+        amount.focus_force()
+        warning.grid(column=2, row=5)
+        return
+    global total
+    total -= b[1]
+    running_total.configure(text=f"{currency}{total}")
+    b[0] = name.get()
+    b[1] = amount.get()
+    print(amount.get())
+    total += int(b[1])
+    window.unbind('<Return>')
+    hide_widgets(name, name_label, amount, amount_label, return_label)
 
 def hide_widgets(*widgets):
     for widget in widgets:
@@ -103,7 +136,10 @@ amount_label = Label(window, text="enter amount of transaction:\n(- for costs)",
 return_label = Label(window, text="submit with the enter key", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 warning = Label(window, text="only numbers please", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 delete_tree = Button(window, text="delete selected item", fg=colours[1], bg=colours[2], font=(fonter, 13), command=pop_tree)
-delete_tree.grid(column=2, row=1, sticky="e")
+delete_tree.grid(column=2, row=1, padx=100, sticky="e")
+edit_tree = Button(window, text="edit selected item", fg=colours[1], bg=colours[2], font=(fonter, 13), command=edit_tree)
+edit_tree.grid(column=2, row=2, padx=105, sticky="e")
+edit_forgor_label = Label(window, text="please select a thing to edit", fg=colours[1], bg=colours[2], font=(fonter, 13, "bold"))
 
 def main():
     window.mainloop()
